@@ -18,6 +18,7 @@ class FindBandRatio:
     """ Class to find the band ratio.
 
     """
+
     def __init__(self, data_dir, file_list):
         self.data_dir = data_dir
         self.file_list = file_list
@@ -188,14 +189,16 @@ class FindBandRatio:
 
         return df_spectrum_165
 
-    def find_ratio(self, file):
+    def find_ratio(self, file, plotting=True):
         """ Find the ratio of the area difference for the 1.65 micron spectral
             line to the area difference for the entire spectrum.
 
             Parameters:
             file (str): string with file name
+            plotting (bool): if True, plot the areas (default is True)
 
             Returns:
+            numpy.float64: ratio of 1.65 micron feature area to total area
 
         """
         # Object name
@@ -219,11 +222,14 @@ class FindBandRatio:
         area_165 = self.find_area(df_spectrum_165)
         ratio = area_165 / area_total
 
-        # Plot the full spectrum and 1.65 micron feature areas
-        plt.figure()
-        self.plot_spectrum(df_spectrum, self.color_full_area)  # Full spectrum
-        self.plot_spectrum(df_spectrum_165, self.color_165_area)  # 1.65 micron feature
-        plt.ylabel('Relative Reflectance')
-        plt.xlabel('Wavelength [microns]')
-        plt.title(f'{obj}: ratio={ratio:.3}')  # The .3 means print 3 sig figs
-        plt.show()
+        if plotting:
+            # Plot the full spectrum and 1.65 micron feature areas
+            plt.figure()
+            self.plot_spectrum(df_spectrum, self.color_full_area)  # Full spectrum
+            self.plot_spectrum(df_spectrum_165, self.color_165_area)  # 1.65 micron feature
+            plt.ylabel('Relative Reflectance')
+            plt.xlabel('Wavelength [microns]')
+            plt.title(f'{obj}: ratio={ratio:.3}')  # The .3 means print 3 sig figs
+            plt.show()
+
+        return ratio
